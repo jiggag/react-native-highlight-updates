@@ -1,0 +1,29 @@
+{
+  "name": "@jiggag/react-native-highlight-updates",
+  "version": "0.0.1",
+  "description": "react native highlight updates",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native",
+    "render",
+    "highlight",
+    "plugin"
+  ],
+  "author": "jiggag",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiggag/react-native-highlight-updates.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jiggag/react-native-highlight-updates/issues"
+  },
+  "homepage": "https://github.com/jiggag/react-native-highlight-updates#readme",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-native": "^0.69.1"
+  }
+}
