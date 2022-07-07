@@ -1,8 +1,8 @@
 import React from 'react';
-import {RerenderTest} from './src/pages/RerenderTest';
+import {CurringTest} from './src/pages/CurringTest';
 
 const App = () => {
-  return <RerenderTest />;
+  return <CurringTest />;
 };
 
 export default App;
