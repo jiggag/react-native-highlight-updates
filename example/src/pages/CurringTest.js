@@ -1,5 +1,5 @@
 import React, {memo, useEffect, useMemo, useState} from 'react';
-import {useCurring, useMemoCurring} from '../useCurring';
+import {useCurring, useMemoCurring, useParamsCurring} from '../useCurring';
 import {
   Pressable,
   SafeAreaView,
@@ -65,6 +65,13 @@ export const CurringTest = memo(() => {
   const memoCurring = useMemoCurring(
     params => () => {
       console.log('[useMemoCurring] call', params);
+    },
+    [deps],
+  );
+
+  const paramsCurring = useParamsCurring(
+    params => () => {
+      console.log('[paramsCurring] call', params);
     },
     [deps],
   );
@@ -144,6 +151,27 @@ export const CurringTest = memo(() => {
         memoCurring(5): 메모이제이션
         => curring deps 업데이트 시점에 훅 업데이트 발생
         => 그 외에는 메모이제이션
+        `}</Text>
+        <WithHighlight>
+          <Memoized4 onPress={memoCurring(6)} index={6} />
+        </WithHighlight>
+        <Text>{`
+        컴포넌트: 리렌더
+        memoCurring(6): 메모이제이션
+        => curring params가 마지막으로 사용한 func 기준으로 덮어씌워지는 이슈
+        => memoCurring(5) 와 memoCurring(6) 사용했으나 마지막 사용한 memoCurring(6)으로 로그 찍힘
+        `}</Text>
+
+        <WithHighlight>
+          <Memoized4 onPress={paramsCurring(7)} index={7} />
+        </WithHighlight>
+        <WithHighlight>
+          <Memoized4 onPress={paramsCurring(7.5)} index={7.5} />
+        </WithHighlight>
+        <Text>{`
+        컴포넌트: 리렌더
+        paramsCurring(7): 리렌더 유발
+        => paramsCurring(7)가 새로운 콜백을 만들어내면서 파라미터 덮어씌워지는 이슈는 없어졌으나 메모이제이션 안됨 
         `}</Text>
       </ScrollView>
     </SafeAreaView>

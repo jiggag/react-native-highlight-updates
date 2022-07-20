@@ -34,7 +34,7 @@ export const WithHighlight = memo(({color = 'red', children}) => {
   );
 
   return useMemo(() => {
-    console.log(">>>>>> [withHighlight] rerender", color);
+    // console.log(">>>>>> [withHighlight] rerender", color);
     return (
       <View>
         <Animated.View style={animatedStyle} />

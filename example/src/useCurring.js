@@ -40,3 +40,38 @@ export const useMemoCurring = (fn, deps) => {
     return callbackRef.current;
   }, []);
 };
+
+export const useParamsCurring = (fn, deps) => {
+  const indexRef = useRef(0);
+  const fnRef = useRef(fn);
+  const depsRef = useRef(deps);
+  const paramsMapRef = useRef({});
+  const callbackMapRef = useRef({});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedDeps = useMemo(() => deps, deps);
+
+  useEffect(() => {
+    if (depsRef.current !== memoizedDeps) {
+      fnRef.current = fn;
+      depsRef.current = memoizedDeps;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memoizedDeps]);
+
+  return useCallback((...arg) => {
+    const key = indexRef.current;
+    paramsMapRef.current = {
+      ...paramsMapRef.current,
+      [key]: arg || [],
+    };
+    callbackMapRef.current = {
+      ...callbackMapRef.current,
+      [key]: () => {
+        fnRef.current(paramsMapRef.current[key])();
+      },
+    };
+    indexRef.current = indexRef.current + 1;
+    return callbackMapRef.current[key];
+  }, []);
+};
+
