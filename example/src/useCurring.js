@@ -1,8 +1,9 @@
-import {useCallback, useEffect, useMemo, useRef} from 'react';
+import {createRef, useCallback, useEffect, useMemo, useRef} from 'react';
 
 export const useCurring = (fn, deps) => {
   const ref = useRef();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const callback = useCallback(() => fn(...ref.current), deps);
 
   return useCallback(
@@ -23,6 +24,7 @@ export const useMemoCurring = (fn, deps) => {
     fnRef.current(argRef.current)();
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizedDeps = useMemo(() => deps, deps);
 
   useEffect(() => {
@@ -75,3 +77,28 @@ export const useParamsCurring = (fn, deps) => {
   }, []);
 };
 
+export const useParamsMemoCurring = (fn, deps) => {
+  const fnRef = useRef(fn);
+  const depsRef = useRef(deps);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedDeps = useMemo(() => deps, deps);
+
+  useEffect(() => {
+    if (depsRef.current !== memoizedDeps) {
+      fnRef.current = fn;
+      depsRef.current = memoizedDeps;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memoizedDeps]);
+
+  const cb = useRef(params => {
+    const fn1 = fnRef.current(params);
+    return ((param, fn) => {
+
+      return fn;
+    })(params, fn1);
+  });
+  return useCallback((...arg) => {
+    return cb.current(arg || []);
+  }, []);
+};
