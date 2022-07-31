@@ -102,3 +102,39 @@ export const useParamsMemoCurring = (fn, deps) => {
     return cb.current(arg || []);
   }, []);
 };
+
+export const useParamsMemoCurringSerialize = (fn, deps) => {
+  const fnRef = useRef(fn);
+  const depsRef = useRef(deps);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedDeps = useMemo(() => deps, deps);
+
+  useEffect(() => {
+    if (depsRef.current !== memoizedDeps) {
+      fnRef.current = fn;
+      depsRef.current = memoizedDeps;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memoizedDeps]);
+
+  const cbMapRef = useRef({});
+  const cbRef = useRef(params => {
+    const curringFn = fnRef.current(params);
+    const serializeParams = JSON.stringify(params);
+    return ((index, fn) => {
+      if (!cbMapRef.current[index]) {
+        cbMapRef.current = {
+          ...cbMapRef.current,
+          [index]: fn,
+        };
+      }
+
+      return index;
+    })(serializeParams, curringFn);
+  });
+  return useCallback((...arg) => {
+    const index = cbRef.current(arg || []);
+    return cbMapRef.current[index];
+  }, []);
+};
+

@@ -1,5 +1,11 @@
 import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
-import {useCurring, useMemoCurring, useParamsCurring, useParamsMemoCurring} from '../useCurring';
+import {
+  useCurring,
+  useMemoCurring,
+  useParamsCurring,
+  useParamsMemoCurring,
+  useParamsMemoCurringSerialize,
+} from '../useCurring';
 import {
   Pressable,
   SafeAreaView,
@@ -79,6 +85,13 @@ export const CurringTest = memo(() => {
   const paramsMemoCurring = useParamsMemoCurring(
     params => () => {
       console.log('[paramsMemoCurring] call', params);
+    },
+    [deps],
+  );
+
+  const paramsMemoCurringSerialize = useParamsMemoCurringSerialize(
+    params => () => {
+      console.log('[paramsMemoCurringSerialize] call', params);
     },
     [deps],
   );
@@ -203,6 +216,51 @@ export const CurringTest = memo(() => {
         paramsMemoCurring: 메모이제이션
         => paramsMemoCurring 전체가 메모이제이션 되어서 전달
         => 파라미터가 각각 9, 9.5 정상 동작
+        `}</Text>
+
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringSerialize([1, 2, 3])}
+            index={'[1,2,3]'}
+          />
+        </WithHighlight>
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringSerialize([3, 2, 1])}
+            index={'[3,2,1]'}
+          />
+        </WithHighlight>
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringSerialize(4, 5, 6)}
+            index={'4,5,6'}
+          />
+        </WithHighlight>
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringSerialize('첫번째', {
+              key: 'value',
+              name: '파라미터',
+            })}
+            index={"'첫번째', { key: 'value', name: '파라미터' }"}
+          />
+        </WithHighlight>
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringSerialize(4, [
+              '두번째',
+              '파라미터',
+              {key: '이런거'},
+            ])}
+            index={"4,['두번째', '파라미터', {key:'이런거'}]"}
+          />
+        </WithHighlight>
+        <Text>{`
+        컴포넌트: 리렌더
+        paramsMemoCurringSerialize(n): 메모이제이션
+        => 파라미터가 변경되면 커링 1차 함수도 새로 만들어져야하므로 리렌더가 의도됨
+        => 전달하는 파라미터를 직렬화하여 키로 사용
+        => 파라미터가 각각 정상 동작
         `}</Text>
       </ScrollView>
     </SafeAreaView>
