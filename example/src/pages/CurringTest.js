@@ -105,6 +105,14 @@ export const CurringTest = memo(() => {
     [curring],
   );
 
+  const testCallback = useCallback(() => {
+    // testCallback
+  }, []);
+
+  const testCallback2 = useCallback(() => {
+    // testCallback2
+  }, []);
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCount(prev => {
@@ -261,6 +269,32 @@ export const CurringTest = memo(() => {
         => 파라미터가 변경되면 커링 1차 함수도 새로 만들어져야하므로 리렌더가 의도됨
         => 전달하는 파라미터를 직렬화하여 키로 사용
         => 파라미터가 각각 정상 동작
+        `}</Text>
+
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringSerialize(4, testCallback, 1)}
+            index={'4, testCallback, 1'}
+          />
+        </WithHighlight>
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringSerialize(4, testCallback2, 1)}
+            index={'4, testCallback2, 2'}
+          />
+        </WithHighlight>
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringSerialize(4, [
+              {key: '이런거', depth: {key: '문제'}},
+            ])}
+            index={"4,[{key: '이런거', depth: {key: '문제'}}]"}
+          />
+        </WithHighlight>
+        <Text>{`
+        컴포넌트: 리렌더
+        paramsMemoCurringSerialize(n): 메모이제이션
+        => 파라미터에 콜백이나 뎁스가 있으면 직렬화 문제 발생
         `}</Text>
       </ScrollView>
     </SafeAreaView>
