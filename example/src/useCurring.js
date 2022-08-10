@@ -138,3 +138,7 @@ export const useParamsMemoCurringSerialize = (fn, deps) => {
   }, []);
 };
 
+const deepSerialize = (args) => {
+  // TODO useCurring 파라미터 직렬화
+  return args;
+};
