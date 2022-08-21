@@ -1,5 +1,5 @@
 import React from 'react';
-import {CurringTest} from './src/pages/CurringTest';
+import {CurringTest} from 'pages/CurringTest';
 
 const App = () => {
   return <CurringTest />;

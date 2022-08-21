@@ -6,7 +6,7 @@ import {
   useParamsMemoCurring,
   useParamsMemoCurringKey,
   useParamsMemoCurringSerialize,
-} from '../useCurring';
+} from 'useCurring';
 import {
   Pressable,
   SafeAreaView,
@@ -15,10 +15,20 @@ import {
   Text,
   View,
 } from 'react-native';
-import {WithHighlight} from '../WithHighlight';
+import {WithHighlight} from 'WithHighlight';
+
+interface MemoizedProps {
+  index: string | number;
+  onPress: () => void;
+}
+
+interface MemoizedCurringProps {
+  index: string | number;
+  curring: (index: string | number) => () => void;
+}
 
 // onPress: () => void;
-const Memoized4 = memo(({index, onPress}) => {
+const Memoized4 = memo(({index, onPress}: MemoizedProps) => {
   return (
     <View style={styles.container}>
       <WithHighlight color="yellow">
@@ -31,7 +41,7 @@ const Memoized4 = memo(({index, onPress}) => {
 });
 
 // curring: () => () => void
-const MemoizedParent = memo(({index, curring}) => {
+const MemoizedParent = memo(({index, curring}: MemoizedCurringProps) => {
   console.log(
     `[MemoizedParent-${index}] 상위 컴포넌트가 리렌더 되면 curring 형태에 따라 리렌더 된다`,
   );
@@ -47,7 +57,7 @@ const MemoizedParent = memo(({index, curring}) => {
 });
 
 // curring: () => () => void
-const MemoizedChild = memo(({curring, index}) => {
+const MemoizedChild = memo(({curring, index}: MemoizedCurringProps) => {
   console.log('[MemoizedChild] curring 형태에 따라 리렌더 된다');
   return (
     <View style={styles.container}>
@@ -63,42 +73,42 @@ export const CurringTest = memo(() => {
   const [deps, setDeps] = useState(0);
 
   const curring = useCurring(
-    params => () => {
+    (params: unknown) => () => {
       console.log('[useCurring] call', params);
     },
     [],
   );
 
   const memoCurring = useMemoCurring(
-    params => () => {
+    (params: unknown) => () => {
       console.log('[useMemoCurring] call', params);
     },
     [deps],
   );
 
   const paramsCurring = useParamsCurring(
-    params => () => {
+    (params: unknown) => () => {
       console.log('[paramsCurring] call', params);
     },
     [deps],
   );
 
   const paramsMemoCurring = useParamsMemoCurring(
-    params => () => {
+    (params: unknown) => () => {
       console.log('[paramsMemoCurring] call', params);
     },
     [deps],
   );
 
   const paramsMemoCurringSerialize = useParamsMemoCurringSerialize(
-    params => () => {
+    (params: unknown) => () => {
       console.log('[paramsMemoCurringSerialize] call', params);
     },
     [deps],
   );
 
   const paramsMemoCurringKey = useParamsMemoCurringKey(
-    params => () => {
+    (params: unknown) => () => {
       console.log('[paramsMemoCurringKey] call', params);
     },
     [deps],

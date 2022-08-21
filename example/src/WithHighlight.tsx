@@ -1,7 +1,12 @@
-import React, {memo, useMemo, useRef} from 'react';
+import React, {memo, ReactNode, useMemo, useRef} from 'react';
 import {Animated, View} from 'react-native';
 
-export const WithHighlight = memo(({color = 'red', children}) => {
+interface WithHighlightProps {
+  color?: string;
+  children: ReactNode;
+}
+
+export const WithHighlight = memo(({color = 'red', children}: WithHighlightProps) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
   Animated.timing(opacity, {
@@ -24,7 +29,7 @@ export const WithHighlight = memo(({color = 'red', children}) => {
       }),
       borderColor: color,
       borderWidth: 2,
-      position: 'absolute',
+      position: 'absolute' as const,
       top: 0,
       left: 0,
       right: 0,

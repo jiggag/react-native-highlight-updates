@@ -1,8 +1,13 @@
 import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {WithHighlight} from '../WithHighlight';
+import {WithHighlight} from 'WithHighlight';
 
-const MemoizedParent = memo(({children, index = 0}) => {
+interface MemoizedProps {
+  children?: React.ReactElement;
+  index?: number;
+}
+
+const MemoizedParent = memo(({children, index = 0}: MemoizedProps) => {
   console.log(
     `[MemoizedParent-${index}] 상위 컴포넌트가 리렌더 되면 children 형태에 따라 리렌더 된다`,
   );
@@ -13,7 +18,7 @@ const MemoizedParent = memo(({children, index = 0}) => {
   );
 });
 
-const MemoizedChild = memo(({index = 0}) => {
+const MemoizedChild = memo(({index = 0}: MemoizedProps) => {
   console.log(`[MemoizedChild-${index}] 마운트만 되고 리렌더 되지 않는다`);
   return (
     <WithHighlight color="pink">
@@ -39,7 +44,7 @@ export const RerenderTest = memo(() => {
     return <WithHighlight color="orange">{renderMemo}</WithHighlight>;
   }, [renderMemo]);
 
-  const renderCallback = useCallback(index => {
+  const renderCallback = useCallback((index: unknown) => {
     console.log(
       `[useCallback-${index}] 콜백 자체는 메모이제이션 되었지만 매번 새로운 jsx 반환한다`,
     );
