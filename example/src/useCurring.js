@@ -1,4 +1,4 @@
-import {createRef, useCallback, useEffect, useMemo, useRef} from 'react';
+import {useCallback, useEffect, useMemo, useRef} from 'react';
 
 export const useCurring = (fn, deps) => {
   const ref = useRef();
@@ -141,4 +141,44 @@ export const useParamsMemoCurringSerialize = (fn, deps) => {
 const deepSerialize = (args) => {
   // TODO useCurring 파라미터 직렬화
   return args;
+};
+
+export const useParamsMemoCurringKey = (fn, deps) => {
+  const fnRef = useRef(fn);
+  const depsRef = useRef(deps);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedDeps = useMemo(() => deps, deps);
+
+  useEffect(() => {
+    if (depsRef.current !== memoizedDeps) {
+      fnRef.current = fn;
+      depsRef.current = memoizedDeps;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memoizedDeps]);
+
+  const cbMapRef = useRef({});
+  const cbRef = useRef((curringKey, params) => {
+    const curringFn = fnRef.current(params);
+    return ((index, fn) => {
+      if (!cbMapRef.current[index]) {
+        cbMapRef.current = {
+          ...cbMapRef.current,
+          [index]: fn,
+        };
+      }
+
+      return index;
+    })(curringKey, curringFn);
+  });
+  return useCallback(argsObj => {
+    if (argsObj?.curringKey === undefined) {
+      throw Error(
+        `[useParamsMemoCurringKey] 파라미터에 curringKey를 포함해야합니다 (params: ${argsObj})`
+      );
+    }
+    const {curringKey, params} = argsObj;
+    const index = cbRef.current(curringKey, params || []);
+    return cbMapRef.current[index];
+  }, []);
 };

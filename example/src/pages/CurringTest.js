@@ -4,6 +4,7 @@ import {
   useMemoCurring,
   useParamsCurring,
   useParamsMemoCurring,
+  useParamsMemoCurringKey,
   useParamsMemoCurringSerialize,
 } from '../useCurring';
 import {
@@ -96,6 +97,13 @@ export const CurringTest = memo(() => {
     [deps],
   );
 
+  const paramsMemoCurringKey = useParamsMemoCurringKey(
+    params => () => {
+      console.log('[paramsMemoCurringKey] call', params);
+    },
+    [deps],
+  );
+
   const renderMemo = useMemo(
     () => (
       <Pressable onPress={curring(2)}>
@@ -117,7 +125,7 @@ export const CurringTest = memo(() => {
     const intervalId = setInterval(() => {
       setCount(prev => {
         console.log('>>>>>>>>>>>> count 업데이트', prev);
-        // setDeps(Math.floor(prev / 5));
+        setDeps(Math.floor(prev / 5));
         return prev + 1;
       });
     }, 2000);
@@ -295,6 +303,40 @@ export const CurringTest = memo(() => {
         컴포넌트: 리렌더
         paramsMemoCurringSerialize(n): 메모이제이션
         => 파라미터에 콜백이나 뎁스가 있으면 직렬화 문제 발생
+        `}</Text>
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4*/}
+        {/*    onPress={paramsMemoCurringKey(1, ['curringKey'])}*/}
+        {/*    index={'curringKey 없음'}*/}
+        {/*  />*/}
+        {/*</WithHighlight>*/}
+        {/*<Text>{`*/}
+        {/*컴포넌트: 리렌더*/}
+        {/*paramsMemoCurringKey(n): 메모이제이션*/}
+        {/*=> 파라미터에 curringKey를 포함하지 않아 에러 발생*/}
+        {/*`}</Text>*/}
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringKey({
+              curringKey: 'curringKey',
+              params: [1, 'test', {key: 'value'}],
+            })}
+            index={'curringKey 있음'}
+          />
+        </WithHighlight>
+        <WithHighlight>
+          <Memoized4
+            onPress={paramsMemoCurringKey({
+              curringKey: `curringKey-${deps}`,
+              params: [1, 2, 3, deps],
+            })}
+            index={'curringKey가 변경됨'}
+          />
+        </WithHighlight>
+        <Text>{`
+        컴포넌트: 리렌더
+        paramsMemoCurringKey(n): 메모이제이션
+        => 파라미터에 curringKey를 포함하고 있으며 useCurring 훅 디펜던시로 동작
         `}</Text>
       </ScrollView>
     </SafeAreaView>
