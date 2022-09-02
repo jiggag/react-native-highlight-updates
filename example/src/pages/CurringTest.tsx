@@ -220,111 +220,112 @@ export const CurringTest = memo(() => {
         {/*=> paramsCurring(7)가 새로운 콜백을 만들어내면서 파라미터 덮어씌워지는 이슈는 없어졌으나 메모이제이션 안됨 */}
         {/*`}</Text>*/}
 
-        <WithHighlight>
-          <Memoized4 onPress={paramsMemoCurring(8)} index={8} />
-        </WithHighlight>
-        <WithHighlight>
-          <Memoized4 onPress={paramsMemoCurring(8.5)} index={8.5} />
-        </WithHighlight>
-        <Text>{`
-        컴포넌트: 리렌더
-        paramsMemoCurring(n): 리렌더
-        => 파라미터가 각각 8, 8.5 정상 동작하지만 curring 리렌더 계속 유발
-        `}</Text>
-        <WithHighlight>
-          <MemoizedParent curring={paramsMemoCurring} index="parent_9" />
-        </WithHighlight>
-        <WithHighlight>
-          <MemoizedParent curring={paramsMemoCurring} index="parent_9.5" />
-        </WithHighlight>
-        <Text>{`
-        컴포넌트: 리렌더
-        paramsMemoCurring: 메모이제이션
-        => paramsMemoCurring 전체가 메모이제이션 되어서 전달
-        => 파라미터가 각각 9, 9.5 정상 동작
-        `}</Text>
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4 onPress={paramsMemoCurring(8)} index={8} />*/}
+        {/*</WithHighlight>*/}
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4 onPress={paramsMemoCurring(8.5)} index={8.5} />*/}
+        {/*</WithHighlight>*/}
+        {/*<Text>{`*/}
+        {/*컴포넌트: 리렌더*/}
+        {/*paramsMemoCurring(n): 리렌더*/}
+        {/*=> 파라미터가 각각 8, 8.5 정상 동작하지만 curring 리렌더 계속 유발*/}
+        {/*`}</Text>*/}
+        {/*<WithHighlight>*/}
+        {/*  <MemoizedParent curring={paramsMemoCurring} index="parent_9" />*/}
+        {/*</WithHighlight>*/}
+        {/*<WithHighlight>*/}
+        {/*  <MemoizedParent curring={paramsMemoCurring} index="parent_9.5" />*/}
+        {/*</WithHighlight>*/}
+        {/*<Text>{`*/}
+        {/*컴포넌트: 리렌더*/}
+        {/*paramsMemoCurring: 메모이제이션*/}
+        {/*=> paramsMemoCurring 전체가 메모이제이션 되어서 전달*/}
+        {/*=> 파라미터가 각각 9, 9.5 정상 동작*/}
+        {/*`}</Text>*/}
 
-        <WithHighlight>
-          <Memoized4
-            onPress={paramsMemoCurringSerialize([1, 2, 3])}
-            index={'[1,2,3]'}
-          />
-        </WithHighlight>
-        <WithHighlight>
-          <Memoized4
-            onPress={paramsMemoCurringSerialize([3, 2, 1])}
-            index={'[3,2,1]'}
-          />
-        </WithHighlight>
-        <WithHighlight>
-          <Memoized4
-            onPress={paramsMemoCurringSerialize(4, 5, 6)}
-            index={'4,5,6'}
-          />
-        </WithHighlight>
-        <WithHighlight>
-          <Memoized4
-            onPress={paramsMemoCurringSerialize('첫번째', {
-              key: 'value',
-              name: '파라미터',
-            })}
-            index={"'첫번째', { key: 'value', name: '파라미터' }"}
-          />
-        </WithHighlight>
-        <WithHighlight>
-          <Memoized4
-            onPress={paramsMemoCurringSerialize(4, [
-              '두번째',
-              '파라미터',
-              {key: '이런거'},
-            ])}
-            index={"4,['두번째', '파라미터', {key:'이런거'}]"}
-          />
-        </WithHighlight>
-        <Text>{`
-        컴포넌트: 리렌더
-        paramsMemoCurringSerialize(n): 메모이제이션
-        => 파라미터가 변경되면 커링 1차 함수도 새로 만들어져야하므로 리렌더가 의도됨
-        => 전달하는 파라미터를 직렬화하여 키로 사용
-        => 파라미터가 각각 정상 동작
-        `}</Text>
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4*/}
+        {/*    onPress={paramsMemoCurringSerialize([1, 2, 3])}*/}
+        {/*    index={'[1,2,3]'}*/}
+        {/*  />*/}
+        {/*</WithHighlight>*/}
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4*/}
+        {/*    onPress={paramsMemoCurringSerialize([3, 2, 1])}*/}
+        {/*    index={'[3,2,1]'}*/}
+        {/*  />*/}
+        {/*</WithHighlight>*/}
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4*/}
+        {/*    onPress={paramsMemoCurringSerialize(4, 5, 6)}*/}
+        {/*    index={'4,5,6'}*/}
+        {/*  />*/}
+        {/*</WithHighlight>*/}
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4*/}
+        {/*    onPress={paramsMemoCurringSerialize('첫번째', {*/}
+        {/*      key: 'value',*/}
+        {/*      name: '파라미터',*/}
+        {/*    })}*/}
+        {/*    index={"'첫번째', { key: 'value', name: '파라미터' }"}*/}
+        {/*  />*/}
+        {/*</WithHighlight>*/}
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4*/}
+        {/*    onPress={paramsMemoCurringSerialize(4, [*/}
+        {/*      '두번째',*/}
+        {/*      '파라미터',*/}
+        {/*      {key: '이런거'},*/}
+        {/*    ])}*/}
+        {/*    index={"4,['두번째', '파라미터', {key:'이런거'}]"}*/}
+        {/*  />*/}
+        {/*</WithHighlight>*/}
+        {/*<Text>{`*/}
+        {/*컴포넌트: 리렌더*/}
+        {/*paramsMemoCurringSerialize(n): 메모이제이션*/}
+        {/*=> 파라미터가 변경되면 커링 1차 함수도 새로 만들어져야하므로 리렌더가 의도됨*/}
+        {/*=> 전달하는 파라미터를 직렬화하여 키로 사용*/}
+        {/*=> 파라미터가 각각 정상 동작*/}
+        {/*`}</Text>*/}
 
-        <WithHighlight>
-          <Memoized4
-            onPress={paramsMemoCurringSerialize(4, testCallback, 1)}
-            index={'4, testCallback, 1'}
-          />
-        </WithHighlight>
-        <WithHighlight>
-          <Memoized4
-            onPress={paramsMemoCurringSerialize(4, testCallback2, 1)}
-            index={'4, testCallback2, 2'}
-          />
-        </WithHighlight>
-        <WithHighlight>
-          <Memoized4
-            onPress={paramsMemoCurringSerialize(4, [
-              {key: '이런거', depth: {key: '문제'}},
-            ])}
-            index={"4,[{key: '이런거', depth: {key: '문제'}}]"}
-          />
-        </WithHighlight>
-        <Text>{`
-        컴포넌트: 리렌더
-        paramsMemoCurringSerialize(n): 메모이제이션
-        => 파라미터에 콜백이나 뎁스가 있으면 직렬화 문제 발생
-        `}</Text>
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4*/}
+        {/*    onPress={paramsMemoCurringSerialize(4, testCallback, 1)}*/}
+        {/*    index={'4, testCallback, 1'}*/}
+        {/*  />*/}
+        {/*</WithHighlight>*/}
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4*/}
+        {/*    onPress={paramsMemoCurringSerialize(4, testCallback2, 1)}*/}
+        {/*    index={'4, testCallback2, 2'}*/}
+        {/*  />*/}
+        {/*</WithHighlight>*/}
+        {/*<WithHighlight>*/}
+        {/*  <Memoized4*/}
+        {/*    onPress={paramsMemoCurringSerialize(4, [*/}
+        {/*      {key: '이런거', depth: {key: '문제'}},*/}
+        {/*    ])}*/}
+        {/*    index={"4,[{key: '이런거', depth: {key: '문제'}}]"}*/}
+        {/*  />*/}
+        {/*</WithHighlight>*/}
+        {/*<Text>{`*/}
+        {/*컴포넌트: 리렌더*/}
+        {/*paramsMemoCurringSerialize(n): 메모이제이션*/}
+        {/*=> 파라미터에 콜백이나 뎁스가 있으면 직렬화 문제 발생*/}
+        {/*`}</Text>*/}
+
         {/*<WithHighlight>*/}
         {/*  <Memoized4*/}
         {/*    onPress={paramsMemoCurringKey(1, ['curringKey'])}*/}
         {/*    index={'curringKey 없음'}*/}
         {/*  />*/}
         {/*</WithHighlight>*/}
-        {/*<Text>{`*/}
-        {/*컴포넌트: 리렌더*/}
-        {/*paramsMemoCurringKey(n): 메모이제이션*/}
-        {/*=> 파라미터에 curringKey를 포함하지 않아 에러 발생*/}
-        {/*`}</Text>*/}
+        <Text>{`
+        컴포넌트: 리렌더
+        paramsMemoCurringKey(n): 메모이제이션
+        => 파라미터에 curringKey를 포함하지 않아 에러 발생
+        `}</Text>
         <WithHighlight>
           <Memoized4
             onPress={paramsMemoCurringKey({
