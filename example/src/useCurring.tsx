@@ -4,10 +4,13 @@ type Callback = () => void;
 type CurringFn = (...params: unknown[]) => Callback;
 type UseCurring = (fn: CurringFn, deps: unknown[]) => CurringFn;
 
-type CurringParamsWithKey = { curringKey: string; params: unknown[]; };
+type CurringParamsWithKey = {curringKey: string; params: unknown[]};
 type CurringFnWithoutKey = (params: CurringParamsWithKey['params']) => Callback;
 type CurringFnWithKey = (params: CurringParamsWithKey) => Callback;
-type UseCurringWithKey = (fn: CurringFnWithoutKey, deps: unknown[]) => CurringFnWithKey;
+type UseCurringWithKey = (
+  fn: CurringFnWithoutKey,
+  deps: unknown[],
+) => CurringFnWithKey;
 
 export const useCurring: UseCurring = (fn, deps) => {
   const ref = useRef<unknown[]>([]);
@@ -103,7 +106,6 @@ export const useParamsMemoCurring: UseCurring = (fn, deps) => {
   const cb = useRef((params: unknown[]) => {
     const fn1 = fnRef.current(params);
     return ((param, fn) => {
-
       return fn;
     })(params, fn1);
   });
@@ -167,23 +169,25 @@ export const useParamsMemoCurringKey: UseCurringWithKey = (fn, deps) => {
   }, [memoizedDeps]);
 
   const cbMapRef = useRef<Record<string, Callback>>({});
-  const cbRef = useRef((curringKey: string, params: CurringParamsWithKey['params']) => {
-    const curringFn = fnRef.current(params);
-    return ((index, fn) => {
-      if (!cbMapRef.current[index]) {
-        cbMapRef.current = {
-          ...cbMapRef.current,
-          [index]: fn,
-        };
-      }
+  const cbRef = useRef(
+    (curringKey: string, params: CurringParamsWithKey['params']) => {
+      const curringFn = fnRef.current(params);
+      return ((index, fn) => {
+        if (!cbMapRef.current[index]) {
+          cbMapRef.current = {
+            ...cbMapRef.current,
+            [index]: fn,
+          };
+        }
 
-      return index;
-    })(curringKey, curringFn);
-  });
+        return index;
+      })(curringKey, curringFn);
+    },
+  );
   return useCallback((argsObj: CurringParamsWithKey) => {
     if (argsObj?.curringKey === undefined) {
       throw Error(
-        `[useParamsMemoCurringKey] 파라미터에 curringKey를 포함해야합니다 (params: ${argsObj})`
+        `[useParamsMemoCurringKey] 파라미터에 curringKey를 포함해야합니다 (params: ${argsObj})`,
       );
     }
     const {curringKey, params} = argsObj;
